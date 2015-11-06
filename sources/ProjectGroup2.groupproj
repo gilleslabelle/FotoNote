@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{1675358A-8BA0-4E53-B024-69C84EFA8E61}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="FMXClient\FotoNote.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLServer\AM.TestPhotoReceiveVCL.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="FotoNote">
+        <MSBuild Projects="FMXClient\FotoNote.dproj"/>
+    </Target>
+    <Target Name="FotoNote:Clean">
+        <MSBuild Projects="FMXClient\FotoNote.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FotoNote:Make">
+        <MSBuild Projects="FMXClient\FotoNote.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="AM_TestPhotoReceiveVCL">
+        <MSBuild Projects="VCLServer\AM.TestPhotoReceiveVCL.dproj"/>
+    </Target>
+    <Target Name="AM_TestPhotoReceiveVCL:Clean">
+        <MSBuild Projects="VCLServer\AM.TestPhotoReceiveVCL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AM_TestPhotoReceiveVCL:Make">
+        <MSBuild Projects="VCLServer\AM.TestPhotoReceiveVCL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="FotoNote;AM_TestPhotoReceiveVCL"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="FotoNote:Clean;AM_TestPhotoReceiveVCL:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="FotoNote:Make;AM_TestPhotoReceiveVCL:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

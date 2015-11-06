@@ -1,0 +1,85 @@
+inherited MainForm_iPhone4in: TMainForm_iPhone4in
+  ClientHeight = 548
+  ClientWidth = 320
+  DesignerMasterStyle = 2
+  inherited TabControl: TTabControl
+    Size.Width = 320.000000000000000000
+    Size.Height = 548.000000000000000000
+    inherited TabItemListNotes: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 237.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar2: TToolBar
+        Position.Y = 455.000000000000000000
+        Size.Width = 320.000000000000000000
+        inherited cmdAddNote: TSpeedButton
+          Position.X = 271.000000000000000000
+        end
+      end
+      inherited ToolBarMain: TToolBar
+        Size.Width = 320.000000000000000000
+        inherited lblTitle: TLabel
+          Size.Width = 204.000000000000000000
+        end
+        inherited cmdSend: TButton
+          Position.X = 248.000000000000000000
+        end
+      end
+      inherited lvNotes: TListView
+        Size.Width = 320.000000000000000000
+        Size.Height = 411.000000000000000000
+      end
+    end
+    inherited TabItemTakeNote: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 68.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+    end
+    inherited TabItemClients: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 100.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+    end
+    inherited tabLog: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 56.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      inherited LogMemo: TMemo
+        Viewport.Width = 40.000000000000000000
+        Viewport.Height = 0.000000000000000000
+      end
+    end
+    inherited TabItemServeur: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 87.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited Memo1: TMemo
+        Viewport.Width = 50.000000000000000000
+        Viewport.Height = 0.000000000000000000
+      end
+    end
+  end
+  inherited MultiView1: TMultiView
+    Mode = Popover
+    Size.Height = 400.000000000000000000
+    Visible = False
+    inherited Layout2: TLayout
+      Size.Width = 247.000000000000000000
+      inherited Label2: TLabel
+        Size.Width = 198.000000000000000000
+      end
+      inherited BtRefresh: TButton
+        Position.X = 203.000000000000000000
+      end
+      inherited lblConnection: TLabel
+        Size.Width = 198.000000000000000000
+      end
+    end
+    inherited ListBox1: TListBox
+      Size.Width = 257.000000000000000000
+      Size.Height = 335.000000000000000000
+      Viewport.Width = 257.000000000000000000
+      Viewport.Height = 335.000000000000000000
+    end
+  end
+end
