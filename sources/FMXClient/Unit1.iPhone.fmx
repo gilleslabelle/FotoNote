@@ -1,0 +1,143 @@
+inherited Form1_iPhone: TForm1_iPhone
+  ClientHeight = 460
+  ClientWidth = 320
+  DesignerMasterStyle = 2
+  inherited TabControl: TTabControl
+    Size.Width = 320.000000000000000000
+    Size.Height = 460.000000000000000000
+    inherited TabItemListNotes: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 128.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+    end
+    inherited TabItemTakeNote: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 128.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited ToolBar2: TToolBar
+        Size.Width = 320.000000000000000000
+        inherited cmdTakeNoteOK: TSpeedButton
+          Position.X = 264.000000000000000000
+        end
+      end
+      inherited Layout1: TLayout
+        Size.Width = 310.000000000000000000
+        Size.Height = 357.000000000000000000
+      end
+      inherited VertScrollBox1: TVertScrollBox
+        Size.Width = 320.000000000000000000
+        Size.Height = 367.000000000000000000
+        Viewport.Width = 315.000000000000000000
+        Viewport.Height = 367.000000000000000000
+        inherited LayoutClient: TLayout
+          Size.Width = 305.000000000000000000
+          inherited lblClient: TLabel
+            Size.Width = 305.000000000000000000
+          end
+          inherited txtNomClientSelectionne: TEdit
+            Size.Width = 305.000000000000000000
+          end
+        end
+        inherited LayoutNote: TLayout
+          Size.Width = 305.000000000000000000
+          inherited Label1: TLabel
+            Size.Width = 305.000000000000000000
+          end
+          inherited txtNote: TEdit
+            Size.Width = 305.000000000000000000
+          end
+        end
+        inherited LayoutPhoto: TLayout
+          Size.Width = 305.000000000000000000
+          inherited Layout2: TLayout
+            Size.Width = 305.000000000000000000
+            inherited FlowLayout1: TFlowLayout
+              Size.Width = 255.000000000000000000
+              inherited cmdGetPictureFromLibrary: TButton
+                Position.X = 211.000000000000000000
+              end
+              inherited cmdSelectFichierWindows: TButton
+                Position.X = 167.000000000000000000
+              end
+              inherited cmdTakePicture: TButton
+                Position.X = 123.000000000000000000
+              end
+            end
+          end
+          inherited imNote: TImageViewer
+            Position.X = 22.000000000000000000
+            Viewport.Width = 260.000000000000000000
+            Viewport.Height = 236.000000000000000000
+          end
+        end
+        inherited Layout3: TLayout
+          Size.Width = 305.000000000000000000
+          inherited Label4: TLabel
+            Size.Width = 305.000000000000000000
+          end
+          inherited GridLayout1: TGridLayout
+            Size.Width = 305.000000000000000000
+          end
+        end
+        inherited LayoutDeleteNote: TLayout
+          Size.Width = 305.000000000000000000
+        end
+      end
+    end
+    inherited TabItemClients: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 128.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited lvClients: TListView
+        Size.Width = 50.000000000000000000
+        Size.Height = 0.000000000000000000
+      end
+      inherited ToolBar3: TToolBar
+        Size.Width = 50.000000000000000000
+        inherited Label3: TLabel
+          Size.Width = 50.000000000000000000
+        end
+        inherited SpeedButton2: TSpeedButton
+          Position.X = 6.000000000000000000
+        end
+      end
+      inherited ToolBar4: TToolBar
+        Position.Y = 6.000000000000000000
+        Size.Width = 50.000000000000000000
+        inherited cmdUpdateProjets: TButton
+          Position.X = 6.000000000000000000
+        end
+      end
+    end
+    inherited tabLog: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 128.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited LogMemo: TMemo
+        Viewport.Width = 42.000000000000000000
+        Viewport.Height = 0.000000000000000000
+      end
+    end
+    inherited TabItemServeur: TTabItem
+      Size.Width = 64.000000000000000000
+      ExplicitSize.cx = 128.000000000000000000
+      ExplicitSize.cy = 49.000000000000000000
+      inherited Memo1: TMemo
+        Viewport.Width = 50.000000000000000000
+        Viewport.Height = 0.000000000000000000
+      end
+    end
+  end
+  inherited MultiView1: TMultiView
+    inherited ListBox1: TListBox
+      Viewport.Width = 232.000000000000000000
+      Viewport.Height = 229.000000000000000000
+      inherited ListBoxItem4: TListBoxItem
+        inherited Switch1: TSwitch
+          Position.X = -11.000000000000000000
+          Size.Height = 44.000000000000000000
+        end
+      end
+    end
+  end
+end
