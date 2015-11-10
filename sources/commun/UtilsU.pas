@@ -2,6 +2,11 @@ unit UtilsU;
 
 interface
 
+const
+
+NullDate = -700000;
+InvalidDate = NullDate + 1;
+
 // uses FMX.Graphics,System.Classes, System.NetEncoding, sysUtils;
 
 
@@ -12,9 +17,8 @@ function CalcMd5(valeur: string): string;
 implementation
 
 uses
-  System.Hash;
+  System.Hash,System.SysUtils;
 
-//uses
 //  System.Classes, System.NetEncoding, System.SysUtils, System.Hash;
 
 function CalcMd5(valeur: string): string;

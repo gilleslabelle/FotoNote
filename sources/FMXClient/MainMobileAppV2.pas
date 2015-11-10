@@ -3,23 +3,23 @@ unit MainMobileAppV2;
 interface
 
 uses
-  ClientsU, NotesU, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base, System.Sensors, IPPeerClient, IPPeerServer, Data.Bind.EngExt, FMX.Bind.DBEngExt,
+  ClientsU, NotesU, MainDataModule, FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base, System.Sensors, IPPeerClient, IPPeerServer, Data.Bind.EngExt, FMX.Bind.DBEngExt,
   Data.Bind.Components, System.Tether.Manager, System.Tether.AppProfile, System.Sensors.Components, FMX.MediaLibrary.Actions, System.Classes, System.Actions, FMX.ActnList,
   FMX.StdActns, FMX.StdCtrls, FMX.ListView, FMX.ListBox, FMX.Objects, FMX.ScrollBox, FMX.Memo, FMX.Controls.Presentation, FMX.Layouts, FMX.Controls, FMX.TabControl, FMX.Types,
   FMX.Dialogs, FMX.Forms, FMX.Graphics, System.ImageList, FMX.ImgList, FMX.Edit, FMX.MultiView, FMX.Effects, FMX.Filter.Effects,
-  Data.DB, FireDAC.Comp.Client, FMX.Bind.GenData, Data.Bind.GenData, System.Rtti, System.Bindings.Outputs, FMX.Bind.Editors, Data.Bind.ObjectScope;
+  Data.DB, FireDAC.Comp.Client, FMX.Bind.GenData, Data.Bind.GenData, System.Rtti, System.Bindings.Outputs, FMX.Bind.Editors, Data.Bind.ObjectScope, Data.Bind.DBScope;
 
 type
 
-  TDoInittializationThread = class(TThread)
-  strict private
-    FOwner: TForm;
-  private
-  protected
-    procedure Execute; override;
-  public
-    constructor Create(owner: TForm);
-  end;
+//  TDoInittializationThread = class(TThread)
+//  strict private
+//    FOwner: TForm;
+//  private
+//  protected
+//    procedure Execute; override;
+//  public
+//    constructor Create(owner: TForm);
+//  end;
 
   TMainForm = class(TForm)
     ActionList1: TActionList;
@@ -30,11 +30,8 @@ type
     Layout1: TLayout;
     LocationSensor1: TLocationSensor;
     lblTitle: TLabel;
-    Layout2: TLayout;
-    Label2: TLabel;
     TetheringManager: TTetheringManager;
     TakePhotoAppProfile: TTetheringAppProfile;
-    BtRefresh: TButton;
     ImCaptured: TImage;
     LayoutNote: TLayout;
     Label3: TLabel;
@@ -44,7 +41,6 @@ type
     Button3: TButton;
     LogMemo: TMemo;
     cmdSend: TButton;
-    lblConnection: TLabel;
     cmdUpdateProjets: TButton;
     TabControl: TTabControl;
     TabItemTakeNote: TTabItem;
@@ -93,12 +89,18 @@ type
     ListBoxItem3: TListBoxItem;
     ToolBar5: TToolBar;
     SpeedButton6: TSpeedButton;
-    StyleBook1: TStyleBook;
     ToolBar6: TToolBar;
     ToolBarDeleteNote: TToolBar;
     ToolBar8: TToolBar;
     PrototypeBindSource1: TPrototypeBindSource;
+    BindSourceDB1: TBindSourceDB;
     LinkFillControlToField1: TLinkFillControlToField;
+    ListBoxItem1: TListBoxItem;
+    Edit1: TEdit;
+    ListBoxHeader1: TListBoxHeader;
+    Label1: TLabel;
+    ListBoxItem4: TListBoxItem;
+    Switch1: TSwitch;
     procedure TakePhotoFromLibraryAction1DidFinishTaking(Image: TBitmap);
     procedure LocationSensor1LocationChanged(Sender: TObject; const [Ref] OldLocation, NewLocation: TLocationCoord2D);
     procedure TakePhotoFromCameraAction1DidFinishTaking(Image: TBitmap);
@@ -128,12 +130,14 @@ type
     procedure lbiStatusServerClick(Sender: TObject);
     procedure ListBoxItem2Click(Sender: TObject);
     procedure ListBoxItem3Click(Sender: TObject);
+    procedure ListBoxItem1Click(Sender: TObject);
+    procedure Switch1Click(Sender: TObject);
   strict private
     // FCurrentManagerInfo: TTetheringManagerInfo;
     FCurrentManagerIdentifier: string;
     FClientColl:               TClientColl;
     FIsFormActivated:          Boolean;
-    FThread:                   TDoInittializationThread;
+//    FThread:                   TDoInittializationThread;
   private
     // FGeocoder: TGeocoder;
     FFConnected:     Boolean;
@@ -156,8 +160,8 @@ type
     procedure AfficheUneNote(Value: TUneNote);
     procedure ListNotes;
     procedure DoInitialization;
-    procedure DbImageToBitmap(tbl: TFDTable; blobFld: TBlobField; out img: TImage);
-    procedure BitMapToDBimage(blobFld: TBlobField; img: TImage);
+    procedure DbImageToBitmap(const tbl: TFDTable;const  blobFld: TBlobField; out img: TBitmap);
+    procedure BitMapToDBimage(const blobFld: TBlobField;var img: TBitmap);
   public
     { Public declarations }
     property FConnected: Boolean read FFConnected write SetFConnected;
@@ -169,7 +173,7 @@ var
 implementation
 
 uses IdCoder, IdCoderMIME, REST.JSON, MsgObjU, UtilsU, System.Hash,  UtilsU_FMX,
-  System.JSON, System.SysUtils, MainDataModule;
+  System.JSON, System.SysUtils;
 
 resourcestring
   StrAMPhotoReceiverMana = 'AM.PhotoReceiverManager';
@@ -177,25 +181,30 @@ resourcestring
   StrAMPhotoReceiverApp = 'AM.PhotoReceiverApp';
 
 {$R *.fmx}
-{$R *.Windows.fmx MSWINDOWS}
-{$R *.iPhone4in.fmx IOS}
 
 procedure TMainForm.lbiStatusServerClick(Sender: TObject);
 begin
-  MultiView1.ShowMaster;
+   MultiView1.HideMaster;;
   ChangeTabActionServeur.Execute;
+end;
+
+procedure TMainForm.ListBoxItem1Click(Sender: TObject);
+begin
+    DataModule1.FDConnection1.ExecSQL('DELETE FROM tblNotes');
+    ListNotes;
+      MultiView1.HideMaster;
 end;
 
 procedure TMainForm.ListBoxItem2Click(Sender: TObject);
 begin
-  MultiView1.ShowMaster;
-  ChangeTabActionServeur.Execute;
+  MultiView1.HideMaster;
+  ChangeTabActionLog.Execute;
 
 end;
 
 procedure TMainForm.ListBoxItem3Click(Sender: TObject);
 begin
-  MultiView1.ShowMaster;
+  MultiView1.HideMaster;
   ChangeTabActionListClients.Execute;
 
 end;
@@ -203,7 +212,7 @@ end;
 procedure TMainForm.ListNotes;
 var
   lvi: TListViewItem;
-  img: TImage;
+  img: TBitmap;
 
 begin
   // DataModuleMain.tblnotes.Active := true;
@@ -222,9 +231,9 @@ begin
 
     lvi.Tag := DataModule1.tblnotesID.Value;
 
-    img := TImage.Create(self);
+    //img := TBitmap.Create(0,0);
     DbImageToBitmap(DataModule1.tblnotes, DataModule1.tblnotesPhoto, img);
-    lvi.Bitmap.Assign(img.Bitmap);
+    lvi.Bitmap.Assign(img);
     DataModule1.tblnotes.Next;
     img.Free;
   end;
@@ -271,15 +280,16 @@ procedure TMainForm.lvNotesDeletingItem(Sender: TObject; AIndex: Integer; var AC
 begin
   if DataModule1.tblnotes.Locate('ID', lvNotes.Items[AIndex].Tag) then
   begin
-    DataModule1.tblnotes.Destroy;
+    DataModule1.tblnotes.Delete;
 
+    ACanDelete:=true;
   end;
 
   ListNotes;
 
 end;
 
-procedure TMainForm.DbImageToBitmap(tbl: TFDTable; blobFld: TBlobField; out img: TImage);
+procedure TMainForm.DbImageToBitmap(const tbl: TFDTable;const  blobFld: TBlobField; out img: TBitmap);
 var
   PicStream: TStream;
 begin
@@ -287,10 +297,15 @@ begin
   try
     try
       PicStream := tbl.CreateBlobStream(blobFld, TBlobStreamMode.bmRead);
-      img.Bitmap.LoadFromStream(PicStream);
+      PicStream.Position := 0;
+
+      img := TBitmap.Create(0,0);
+
+      img.LoadFromStream(PicStream);
     except
       on e: Exception do
       begin
+        ShowMessage(E.message);
         LogMemo.Lines.Add('ERREUR Conversion dbimage to image : ' + e.Message)
       end;
     end;
@@ -300,20 +315,21 @@ begin
 
 end;
 
-procedure TMainForm.BitMapToDBimage(blobFld: TBlobField; img: TImage);
+procedure TMainForm.BitMapToDBimage(const blobFld: TBlobField;var img: TBitmap);
 var
   PicStream: TMemoryStream;
 begin
   PicStream := TMemoryStream.Create;
   try
     try
-      img.Bitmap.SaveToStream(PicStream);
-      PicStream.Seek(0, 0);
+      img.SaveToStream(PicStream);
+      PicStream.Position := 0;// .Destroy  .Seek(0, 0);
       blobFld.LoadFromStream(PicStream);
 
     except
       on e: Exception do
       begin
+        ShowMessage(E.message);
         LogMemo.Lines.Add('ERREUR Conversion image to dbimage : ' + e.Message)
       end;
     end;
@@ -325,8 +341,8 @@ end;
 
 procedure TMainForm.lvNotesItemClick(const Sender: TObject; const AItem: TListViewItem);
 var
-  PicStream: TStream;
-  img:       TImage;
+//  PicStream: TStream;
+  img:       TBitmap;
 begin
   // DataModuleMain.tblnotes.IndexName := 'ID';
 
@@ -338,9 +354,9 @@ begin
     FUncomittedNote.Description := DataModule1.tblnotesDescription.Value;
 
 
-    img:=   TImage.Create(Self);
+    img:=   TBitmap.Create(0,0);
     DbImageToBitmap(DataModule1.tblnotes, DataModule1.tblnotesPhoto, img); //
-    FUncomittedNote.Photo.Bitmap.Assign(img.Bitmap);
+    FUncomittedNote.Photo.Assign(img);
     img.Free;
     // PicStream := TStream.Create;
     // try
@@ -371,13 +387,18 @@ end;
 
 procedure TMainForm.TakePhotoFromCameraAction1DidFinishTaking(Image: TBitmap);
 begin
-  ImCaptured.Bitmap := Image;
+//  ImCaptured.Bitmap := Image;
+  ImCaptured.Bitmap.Assign( Image);
 
 end;
 
 procedure TMainForm.TakePhotoFromLibraryAction1DidFinishTaking(Image: TBitmap);
 begin
-  ImCaptured.Bitmap := Image;
+//  ImCaptured.Bitmap := Image;
+  ImCaptured.Bitmap.Assign( Image);
+
+
+
 
 end;
 
@@ -479,6 +500,24 @@ begin
   end;
 end;
 
+procedure TMainForm.Switch1Click(Sender: TObject);
+begin
+    if Switch1.IsChecked then
+    begin
+
+      DataModule1.FDConnection1.Connected := true;
+      DataModule1.tblnotes.Active := true;
+      ListNotes;
+    end
+    else
+    begin
+      DataModule1.FDConnection1.Connected := false;
+      DataModule1.tblnotes.Active := false;
+    end;
+
+  MultiView1.HideMaster;
+end;
+
 procedure TMainForm.cmdAddNoteClick(Sender: TObject);
 begin
   FUncomittedNote           := TUneNote.Create(true);
@@ -528,7 +567,9 @@ end;
 
 procedure TMainForm.UpdateNoteToDatabase(Value: TUneNote);
 var
-  img: TImage;
+  img: TBitmap;
+//  PicStream: TMemoryStream;
+
 begin
 
   if Value.isNewNote then
@@ -546,7 +587,13 @@ begin
   DataModule1.tblnotesClientID.Value    := Value.ClientID;
   DataModule1.tblnotesClientNom.Value   := Value.ClientNom;
 
-  BitMapToDBimage(DataModule1.tblnotesPhoto, Value.Photo);
+  img:= TBitmap.Create(0,0);
+  img.Assign( Value.Photo);
+
+
+
+
+  BitMapToDBimage(DataModule1.tblnotesPhoto, img);
 
   // PicStream := TMemoryStream.Create;
   // try
@@ -575,7 +622,7 @@ procedure TMainForm.AfficheUneNote(Value: TUneNote);
 begin
   txtNote.Text := Value.Description;
 
-  ImCaptured.Bitmap.Assign( Value.Photo.Bitmap);
+  ImCaptured.Bitmap.Assign( Value.Photo);
 
 end;
 
@@ -590,7 +637,7 @@ begin
   if OpenDialog1.Execute then
   begin
     ImCaptured.Bitmap.LoadFromFile(OpenDialog1.FileName);
-    FUncomittedNote.Photo.Bitmap.LoadFromFile(OpenDialog1.FileName);
+    FUncomittedNote.Photo.LoadFromFile(OpenDialog1.FileName);
   end;
 end;
 
@@ -653,7 +700,8 @@ begin
 
   FUncomittedNote.Description := txtNote.Text;
 
-  // FUncomittedNote.Photo :=
+   FUncomittedNote.Photo.Assign(ImCaptured.bitmap);
+
 
   UpdateNoteToDatabase(FUncomittedNote);
 
@@ -671,7 +719,7 @@ begin
   FCurrentManagerIdentifier := '';
   FConnected                := false;
 
-  lblConnection.Text := StrAucuneConnectionAu;
+  lbiStatusServer.ItemData.Detail :=  StrAucuneConnectionAu;
 
   // Iterate through the Remote Profiles
   for I := 0 to TetheringManager.RemoteProfiles.Count - 1 do
@@ -695,7 +743,7 @@ begin
             procedure
             begin
 
-              lblConnection.Text := FCurrentManagerIdentifier;
+              lbiStatusServer.ItemData.Detail := FCurrentManagerIdentifier;
               LogMemo.Lines.Add(Format('Connection effectuée au serveur  %s (%s)', [TetheringManager.RemoteProfiles[I].ProfileText,
                 TetheringManager.RemoteProfiles[I].ProfileIdentifier]));
               FConnected := true;
@@ -804,15 +852,13 @@ begin
 
   FConnected                := false;
   FCurrentManagerIdentifier := '';
-  lblConnection.Text        := StrAucuneConnectionAu;
+  lbiStatusServer.ItemData.Detail        := StrAucuneConnectionAu;
   FClientColl               := TClientColl.Create;
   // TakePhotoAppProfile.Resources.FindByName('License').Value := '12345';
   // This is a unique GUID generated when our application is executed
   LogMemo.Lines.Add('Local Identifier: ' + TetheringManager.Identifier);
   // Now let's AutoConnect to all available Tethering Managers
 
-  // TetheringManager.AutoConnect(2000);
-  // TetheringManager.DiscoverManagers;
 
   // MultiView1.Mode := TMultiViewMode.PlatformBehaviour;
 
@@ -822,20 +868,20 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 begin
 
-  // DataModuleMain.FDConnection1.Connected:= true;
-  // DataModuleMain.tblnotes.Active := true;
+//   DataModule1.FDConnection1.Connected:= true;
+//   DataModule1.tblnotes.Active := true;
 
   FindWalls;
-  // ListNotes;
+//   ListNotes;
 end;
 
 procedure TMainForm.DoInitialization;
 begin
 
-  FThread                 := TDoInittializationThread.Create(self);
-  FThread.FreeOnTerminate := true;
-
-  FThread.Start;
+//  FThread                 := TDoInittializationThread.Create(self);
+//  FThread.FreeOnTerminate := true;
+//
+//  FThread.Start;
 
 end;
 
@@ -937,36 +983,26 @@ end;
 
 { TDoInittializationThread }
 
-constructor TDoInittializationThread.Create(owner: TForm);
-begin
-  FOwner := owner;
-  inherited Create(true);
-end;
-
-procedure TDoInittializationThread.Execute;
-begin
-  inherited;
-
-  DataModule1 := TDataModule1.Create(FOwner);
-
-  DataModule1.OpenDatabase;
-
-  Synchronize(
-    procedure
-    begin
-      // FormWelcome.cmdStartModeBrowse.Visible := true;
-      // FormWelcome.cmdStartModeBrowse.Enabled := true;
-      // FormWelcome.LayoutInitMsg.Visible := false;
-
-      // FormWelcome.Visible := false;
-
-      // MainForm.Show;
-      // MainForm.lbiSortDistance.Visible := MainForm.FisGPPLocationValid;
-
-      // MainForm.LoadCimetieres2;
-      MainForm.ListNotes;
-    end);
-
-end;
+//constructor TDoInittializationThread.Create(owner: TForm);
+//begin
+//  FOwner := owner;
+//  inherited Create(true);
+//end;
+//
+//procedure TDoInittializationThread.Execute;
+//begin
+//  inherited;
+//
+//  DataModule1 := TDataModule1.Create(FOwner);
+//
+//  DataModule1.OpenDatabase;
+//
+//  Synchronize(
+//    procedure
+//    begin
+//      MainForm.ListNotes;
+//    end);
+//
+//end;
 
 end.

@@ -8,28 +8,30 @@ uses
 type
   TUneNote = class
   strict private
+
     FClientNom:   string;
     FClientID:    integer;
     FNoteDate:    TDateTime;
-    FPhoto:       TImage;
+    FPhoto:       TBitmap;
     FDescription: string;
     FisNewNote:   boolean;
+    FID: Int64;
     procedure SetClientID(const Value: integer);
     procedure SetClientNom(const Value: string);
     procedure SetDescription(const Value: string);
     procedure SetNoteDate(const Value: TDateTime);
-    procedure SetPhoto(const Value: TImage);
-  private
+    procedure SetPhoto(const Value: TBitmap);
 
   public
     constructor Create(isNewNote: boolean);
     destructor Destroy; override;
     property Description: string read FDescription write SetDescription;
     property NoteDate: TDateTime read FNoteDate write SetNoteDate;
-    property Photo: TImage read FPhoto write SetPhoto;
+    property Photo: TBitmap read FPhoto write SetPhoto;
     property ClientID: integer read FClientID write SetClientID;
     Property ClientNom: string read FClientNom write SetClientNom;
     function isNewNote: boolean;
+    property ID: Int64 read FID write FID;
 
   end;
 
@@ -57,7 +59,7 @@ begin
   FClientNom := '';
   FClientID  := -1;
 //  FPhoto     := nil
-    FPhoto:=       TImage.Create(nil);
+    FPhoto:=       TBitmap.Create(0,0);
 end;
 
 destructor TUneNote.Destroy;
@@ -85,12 +87,13 @@ begin
   FDescription := Value;
 end;
 
+
 procedure TUneNote.SetNoteDate(const Value: TDateTime);
 begin
   FNoteDate := Value;
 end;
 
-procedure TUneNote.SetPhoto(const Value: TImage);
+procedure TUneNote.SetPhoto(const Value: TBitmap);
 begin
   FPhoto := Value;
 end;
