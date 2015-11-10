@@ -137,7 +137,7 @@ end;
 
 procedure TfrmPhoto.FDMemTblClientsAfterPost(DataSet: TDataSet);
 begin
-  FDMemTblClients.SaveToFile('..\..\..\data\Clients.xml');
+  FDMemTblClients.SaveToFile('..\..\..\..\data\Clients.xml');
   UpdateProjetsObjects;
 end;
 
@@ -177,7 +177,7 @@ begin
 //  Assert(res.Value.DataType = TResourceType.String, '');
 
   try
-    FDMemTblClients.LoadFromFile('..\..\..\data\Clients.xml');
+    FDMemTblClients.LoadFromFile('..\..\..\..\data\Clients.xml');
   except
     FDMemTblClients.CreateDataSet;
   end;
