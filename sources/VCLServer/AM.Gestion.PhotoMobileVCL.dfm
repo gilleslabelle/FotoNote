@@ -96,13 +96,12 @@ object frmPhoto: TfrmPhoto
     TitleFont.Style = []
   end
   object CheckBox1: TCheckBox
-    Left = 816
-    Top = 328
+    Left = 848
+    Top = 344
     Width = 97
     Height = 17
     Caption = 'CheckBox1'
     TabOrder = 7
-    OnClick = CheckBox1Click
   end
   object MediaReceiverManager: TTetheringManager
     OnPairedFromLocal = MediaReceiverManagerPairedFromLocal

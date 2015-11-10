@@ -1,5 +1,8 @@
 unit AM.Gestion.PhotoMobileVCL;
-
+///
+///  /// version de test
+///  ////
+///
 interface
 
 uses
@@ -50,7 +53,6 @@ type
     procedure MediaReceiverManagerRemoteManagerShutdown(const Sender: TObject; const AManagerIdentifier: string);
     procedure Button3Click(Sender: TObject);
     procedure FDMemTblClientsAfterPost(DataSet: TDataSet);
-    procedure CheckBox1Click(Sender: TObject);
   private
     { Private declarations }
     Fstm:     TSTream;
@@ -131,12 +133,6 @@ begin
 //  sl.Free;
 //
 
-end;
-
-procedure TfrmPhoto.CheckBox1Click(Sender: TObject);
-begin
-    TetheringAppProfile1.Visible := CheckBox1.Checked;
-    TetheringAppProfile1.Enabled := CheckBox1.Checked;
 end;
 
 procedure TfrmPhoto.FDMemTblClientsAfterPost(DataSet: TDataSet);
