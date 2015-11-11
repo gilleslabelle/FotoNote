@@ -86,6 +86,7 @@ object DataModule1: TDataModule1
       FieldName = 'ID'
       Origin = 'ID'
       ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
     end
     object tblClientsNom: TWideMemoField
       FieldName = 'Nom'

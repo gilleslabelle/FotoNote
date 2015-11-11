@@ -11,7 +11,7 @@ type
     FTelephone:   string;
     FNom:         string;
     FLati:        double;
-    FDescription: string;
+    FCodePostal: string;
     FVille:       string;
     FLong:        double;
     FAdresse:     string;
@@ -25,7 +25,7 @@ type
     property Telephone: string read FTelephone write FTelephone;
     property Long: double read FLong write FLong;
     property Lati: double read FLati write FLati;
-    property Description: string read FDescription write FDescription;
+    property CodePostal: string read FCodePostal write FCodePostal;
 
   end;
 

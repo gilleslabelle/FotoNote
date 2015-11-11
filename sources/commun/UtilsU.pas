@@ -13,6 +13,7 @@ InvalidDate = NullDate + 1;
 // function StringToComponentProc(Value: string): TComponent;
 // function ComponentToStringProc(Component: TComponent): string;
 function CalcMd5(valeur: string): string;
+function DateTimeToSQLString(const valeur: TDateTime): string;
 
 implementation
 
@@ -30,6 +31,13 @@ begin
 
   Result := Hash.HashAsString;
 
+end;
+
+
+function DateTimeToSQLString(const valeur: TDateTime): string;
+begin
+
+  Result := FormatDateTime('yyyy/mm/dd hh:nn:ss', valeur);
 end;
 
 // function ComponentToStringProc(Component: TComponent): string;

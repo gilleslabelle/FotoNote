@@ -3,10 +3,11 @@ unit MainDataModule;
 interface
 
 uses
-  UtilsU,System.IOUtils, FMX.Dialogs, System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  UtilsU, System.IOUtils, FMX.Dialogs, System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
+  FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.FMXUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, Data.DB,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.Comp.UI;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.Comp.UI, ClientsU;
 
 type
   TDataModule1 = class(TDataModule)
@@ -41,7 +42,10 @@ type
   public
     { Public declarations }
     procedure OpenDatabase;
-    function GetLastClientsUpdate : TDateTime;
+    function GetLastClientsUpdateDate: TDateTime;
+    function SetLastClientsUpdateDate: Boolean;
+    function AddClientToDatabase(unClient: TClient): boolean;
+    procedure DeleteAllClient;
   end;
 
 var
@@ -57,11 +61,42 @@ uses
 {$R *.dfm}
 { TDataModule1 }
 
+function TDataModule1.AddClientToDatabase(unClient: TClient): boolean;
+begin
+
+  Result := true;
+  try
+    tblClients.Insert;
+
+    tblClientsNom.Value := unClient.Nom;
+    tblClientsAdresse.Value := unClient.Adresse;
+    tblClientsVille.Value := unClient.Ville;
+    tblClientsCodePostal.Value := unClient.CodePostal;
+    tblClientsTelephone.Value := unClient.Telephone;
+    tblClientsLongitude.Value := unClient.Long;
+    tblClientsLatitude.Value := unClient.Lati;
+    tblClients.Post;
+  except
+    Result := false;
+  end;
+
+end;
+
 procedure TDataModule1.DataModuleCreate(Sender: TObject);
 begin
   FDConnection1.Connected := false;
   tblNotes.Active := false;
   tblClients.Active := false;
+end;
+
+procedure TDataModule1.DeleteAllClient;
+var
+  strQry: string;
+begin
+   strQry := ('DELETE FROM tblClients');
+
+   FDConnection1.ExecSQL(strQry);
+
 end;
 
 procedure TDataModule1.FDConnection1BeforeConnect(Sender: TObject);
@@ -106,26 +141,37 @@ begin
   end;
 end;
 
-function TDataModule1.GetLastClientsUpdate: TDateTime;
-  var
-    strQry:string;
-    nbV: variant;
+function TDataModule1.GetLastClientsUpdateDate: TDateTime;
 begin
-  strQry:= 'select LastUpdateTableClients from tblInfo'  ;
 
-  nbV:=  FDConnection1.ExecSQLScalar(strQry);
 
-  if VarIsEmpty(nbV)  or VarIsNull(nbV) then
+
+  if tblInfoLastUpdateTableClients.IsNull then
   begin
-     nbV := NullDate;
+    Result := NullDate;
   end
   else
   begin
-    result:= nbV;
+    Result := tblInfoLastUpdateTableClients.Value;
   end;
 
+end;
+
+function TDataModule1.SetLastClientsUpdateDate:Boolean;
+begin
+   Result := true;
+  try
+  tblInfo.First;
+  tblInfo.Edit;
+  tblInfoLastUpdateTableClients.Value := now;
+  tblInfo.Post;
+
+  except
+      Result := false;
+  end;
 
 end;
+
 
 procedure TDataModule1.OpenDatabase;
 begin
@@ -133,6 +179,7 @@ begin
 
   Self.tblNotes.Active := true;
   Self.tblClients.Active := true;
+  Self.tblInfo.Active := true;
 end;
 
 end.
